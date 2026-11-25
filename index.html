@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rent Care Full Loop</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--red:#C9202C;--dark:#921C1E;--maroon:#792826;--bg:#FBF4F2;--card:#fff;--ink:#2a2022;--mut:#7a6a6c;--line:#EBD6D2;--soft:#FBEDEA;--ok:#1f8a4c;--shadow:0 10px 30px rgba(121,40,38,.12);--ring:#d9c4c0}
+@media (prefers-color-scheme:dark){:root{--bg:#161011;--card:#221a1b;--ink:#f4ebe9;--mut:#b7a6a4;--line:#44312f;--soft:#2e2020;--shadow:0 10px 30px rgba(0,0,0,.4);--ring:#5a4442}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Sarabun,Tahoma,sans-serif;line-height:1.45}
+.hero{background:linear-gradient(120deg,var(--dark),var(--red) 60%,#e2495a);color:#fff;padding:18px 28px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.hero h1{margin:0;font-size:26px;font-weight:800;letter-spacing:.2px}
+.hero p{margin:0;opacity:.9;font-size:14px}
+.hero .tags{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:3px 12px;font-size:12.5px}
+main{max-width:1320px;margin:0 auto;padding:18px}
+.top{display:grid;grid-template-columns:500px 1fr;gap:18px;align-items:start}
+@media(max-width:1000px){.top{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:14px}
+.panel h2{margin:0 0 8px;font-size:15px;color:var(--maroon);letter-spacing:.3px}
+@media(prefers-color-scheme:dark){.panel h2{color:#F0969C}}
+/* ring */
+#ring{width:100%;height:auto;display:block}
+.nodeLabel{font-size:13px;font-weight:700;fill:var(--ink)}
+.nodeSub{font-size:10.5px;fill:var(--mut)}
+.pulse{animation:ringPulse 1.6s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes ringPulse{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.9)}}
+#tok{transition:transform 1s cubic-bezier(.6,.05,.2,1)}
+/* controls */
+.now{display:flex;gap:14px;align-items:center;background:linear-gradient(90deg,var(--soft),transparent);border-left:6px solid var(--red);border-radius:14px;padding:12px 16px}
+.now .em{font-size:34px}
+.now b{color:var(--red)}
+.now .t{font-size:18px;font-weight:700;line-height:1.25}
+.now .s{color:var(--mut);font-size:13.5px;margin-top:2px}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.ctrl button{font:inherit;font-weight:700;border:2px solid var(--red);background:var(--card);color:var(--red);border-radius:999px;padding:7px 18px;cursor:pointer;transition:.15s}
+.ctrl button:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(201,32,44,.25)}
+.ctrl button.pri{background:var(--red);color:#fff}
+.ctrl button:disabled{opacity:.4;cursor:default;transform:none;box-shadow:none}
+.ctrl label{font-size:13px;color:var(--mut);display:flex;gap:6px;align-items:center;cursor:pointer}
+.mid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+@media(max-width:700px){.mid{grid-template-columns:1fr}}
+.team{display:flex;flex-direction:column;gap:8px}
+.mem{border:1px solid var(--line);border-radius:14px;padding:9px 11px;background:var(--card);transition:.3s}
+.mem.act{border-color:var(--red);box-shadow:0 0 0 3px rgba(201,32,44,.15)}
+.mem .h{display:flex;align-items:center;gap:9px}
+.mem .a{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px}
+.mem .n{font-weight:700;font-size:14px}.mem .d{font-size:11.5px;color:var(--mut)}
+.mem .st{margin-left:auto}
+.mem .btn{margin-top:8px}
+.log{max-height:300px;overflow:auto;font-size:13px}
+.log div{padding:6px 0 6px 12px;border-left:3px solid var(--line);margin-left:4px;position:relative;animation:slide .4s ease}
+.log div::before{content:"";position:absolute;left:-7px;top:12px;width:9px;height:9px;border-radius:50%;background:var(--red)}
+.log small{color:var(--mut)}
+.who{font-weight:700;color:var(--red)}
+@keyframes slide{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+/* pills + buttons */
+.pill{border-radius:999px;padding:2px 10px;font-size:11.5px;font-weight:700;white-space:nowrap;display:inline-block}
+.pill.ok{background:#d9f2e3;color:var(--ok)}.pill.wait{background:#ffe9cf;color:#a35b00}.pill.gray{background:#ececec;color:#555}.pill.red{background:#fde0e2;color:var(--red)}
+.btn{display:block;width:100%;border:2px solid var(--red);background:var(--card);color:var(--red);border-radius:999px;padding:8px 10px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;transition:.15s}
+.btn:hover{background:var(--soft)}
+.btn.go{background:var(--red);color:#fff;animation:glow 1.5s infinite}
+.btn.go:hover{background:var(--dark)}
+@keyframes glow{0%{box-shadow:0 0 0 0 rgba(201,32,44,.5)}100%{box-shadow:0 0 0 12px rgba(201,32,44,0)}}
+.idle{border:2px dashed var(--line);border-radius:999px;padding:8px;text-align:center;color:var(--mut);font-size:12.5px}
+/* devices */
+.devs{display:grid;grid-template-columns:320px 1fr 320px;gap:20px;margin-top:20px;align-items:start}
+@media(max-width:1150px){.devs{grid-template-columns:1fr 1fr}.devs .win{grid-column:1/-1;order:3}}
+@media(max-width:720px){.devs{grid-template-columns:1fr}}
+.dev h3{margin:0 0 8px;text-align:center;font-size:14px;color:var(--maroon)}
+@media(prefers-color-scheme:dark){.dev h3{color:#F0969C}}
+.dev.act h3{color:var(--red)}
+.dev.act h3::after{content:" ●";animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.2}}
+.phone{width:300px;height:590px;margin:0 auto;background:#111;border-radius:42px;padding:10px;box-shadow:0 18px 40px rgba(0,0,0,.28);position:relative;transition:box-shadow .3s}
+.dev.act .phone{box-shadow:0 0 0 4px rgba(201,32,44,.5),0 18px 40px rgba(0,0,0,.28)}
+.screen{width:100%;height:100%;border-radius:32px;overflow:hidden;background:#fff;color:#222;position:relative;display:flex;flex-direction:column}
+.isl{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:84px;height:22px;background:#111;border-radius:14px;z-index:5}
+.sb{height:34px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 20px 3px;font-size:11px;font-weight:700;flex:0 0 auto}
+/* LINE */
+.line{background:#8fa6c4}
+.lhead{background:#fff;padding:8px 12px;display:flex;gap:9px;align-items:center;border-bottom:1px solid #ddd;flex:0 0 auto;color:#222}
+.lhead b{font-size:14px;display:block;line-height:1.1}.lhead small{font-size:10.5px;color:#06C755}
+.av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--dark));color:#fff;display:grid;place-items:center;font-weight:800;font-size:11px;flex:0 0 auto}
+.lbody{flex:1;overflow:auto;padding:10px 10px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none;background:#8fa6c4}
+.lbody::-webkit-scrollbar{display:none}
+.m{display:flex;gap:6px;align-items:flex-end;max-width:92%}
+.m.in .av{width:24px;height:24px;font-size:9px}
+.m.out{align-self:flex-end}
+.bub{padding:7px 11px;border-radius:16px;font-size:12.5px;line-height:1.35;box-shadow:0 1px 1px rgba(0,0,0,.1)}
+.m.in .bub{background:#fff;color:#222;border-bottom-left-radius:4px}
+.m.out .bub{background:#8de05a;color:#0b2a00;border-bottom-right-radius:4px}
+.bub b{color:var(--red)}
+.card{background:#fff;color:#222;border-radius:14px;overflow:hidden;font-size:12.5px;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.card .ch{background:linear-gradient(120deg,var(--dark),var(--red));color:#fff;padding:8px 11px;font-weight:700}
+.card .cb{padding:8px 11px}
+.card .r{display:flex;justify-content:space-between;gap:8px;padding:2px 0}
+.sysmsg{align-self:center;background:rgba(0,0,0,.28);color:#fff;border-radius:999px;padding:2px 12px;font-size:10.5px}
+.pop{animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.92)}to{opacity:1;transform:none}}
+.lqr{flex:0 0 auto;background:#e9eef5;padding:8px 10px 14px;display:flex;flex-direction:column;gap:6px;min-height:54px}
+.lqr .btn{padding:7px 8px;font-size:12.5px;background:#fff}
+.lqr .btn.go{background:var(--red)}
+.lqr .idle{background:transparent;font-size:11.5px}
+/* tenant app */
+.app{background:#f6f1ef}
+.ahead{background:linear-gradient(150deg,var(--dark),var(--red));color:#fff;padding:2px 16px 16px;border-radius:0 0 22px 22px;flex:0 0 auto}
+.ahead small{opacity:.85;font-size:11px}.ahead b{font-size:17px;display:block}
+.abody{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:9px;scrollbar-width:none}
+.abody::-webkit-scrollbar{display:none}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tile{background:#fff;border-radius:12px;padding:8px 2px;text-align:center;font-size:10.5px;box-shadow:0 1px 3px rgba(0,0,0,.08);color:#444}
+.tile i{display:block;font-style:normal;font-size:19px}
+.tile.dis{opacity:.4}
+.ac{background:#fff;border-radius:14px;padding:10px 12px;font-size:12.5px;box-shadow:0 1px 3px rgba(0,0,0,.08);animation:pop .35s}
+.ac b{color:var(--red)}
+.ac .r{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed #eee}.ac .r:last-child{border:0}
+.photos{display:flex;gap:6px;margin-top:6px}.photos i{flex:1;height:50px;border-radius:8px;background:linear-gradient(135deg,#e3d3cf,#cdb7b2);display:grid;place-items:center;font-style:normal;font-size:20px}
+.steps{display:flex;gap:3px;margin-top:8px}.steps i{flex:1;height:5px;border-radius:3px;background:#eee}.steps i.on{background:var(--red)}
+.empty{margin:auto;text-align:center;color:#999;font-size:12.5px;padding:20px}
+.empty .big{font-size:42px;display:block;margin-bottom:6px}
+.abody .btn{margin-top:2px}
+/* console window */
+.win{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.bar{background:#efe5e2;padding:8px 12px;display:flex;gap:6px;align-items:center}
+@media(prefers-color-scheme:dark){.bar{background:#2f2223}}
+.bar i{width:11px;height:11px;border-radius:50%;background:#e06c6c}.bar i:nth-child(2){background:#e6c25a}.bar i:nth-child(3){background:#6cc36c}
+.bar span{margin-left:10px;font-size:12px;color:var(--mut)}
+.wbody{padding:14px;min-height:520px;animation:pop .3s}
+.wh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.wh h4{margin:0;font-size:18px}.wh small{color:var(--mut)}
+.chk{margin:12px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.chk div{display:flex;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:13.5px;align-items:center}
+.chk div:last-child{border:0}
+.chk i{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:12px;flex:0 0 auto;color:#fff}
+.chk .d i{background:var(--ok);border-color:var(--ok)}
+.chk .d{color:var(--mut)}
+.chk .n i{border-color:var(--red);animation:blink 1.2s infinite}
+.kv{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.kv div{background:var(--soft);border-radius:12px;padding:8px 10px}
+.kv small{display:block;color:var(--mut);font-size:11px}.kv b{font-size:15px}
+.note{margin:16px 2px;color:var(--mut);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="hero"><div><h1>Rent Care · Full Loop</h1><p>เจ้าของคุยที่เดียว · BC หาผู้เช่า · Vesta ตามต้องการ · Smart World เป็นศูนย์กลาง</p></div><div class="tags"><span class="tag">Concept prototype</span><span class="tag">ข้อมูลตัวอย่างทั้งหมด</span><span class="tag">ห้อง A-1203 (สมมติ)</span></div></div>
+<main>
+<div class="top">
+ <div class="panel"><h2>วงจร Rent Care (วนต่อเนื่อง)</h2><svg id="ring" viewBox="0 0 480 450"></svg></div>
+ <div>
+  <div class="panel">
+   <div class="now"><div class="em" id="nowEm">🚀</div><div><div class="t" id="nowT"></div><div class="s" id="nowS"></div></div></div>
+   <div class="ctrl"><button class="pri" id="next">ทำขั้นที่แนะนำ ▶</button><button id="auto">▶▶ เล่นอัตโนมัติ 1 รอบ</button><button id="reset">เริ่มใหม่</button><label><input type="checkbox" id="reno"> รวมเส้นทางปรับห้อง (Vesta)</label></div>
+   <div class="mid">
+    <div><h2>ทีมที่เกี่ยวข้อง</h2><div class="team" id="team"></div></div>
+    <div><h2>บันทึกเคส</h2><div class="log" id="log"></div></div>
+   </div>
+  </div>
+ </div>
+</div>
+<div class="devs">
+ <div class="dev" id="dOwner"><h3>เจ้าของห้อง · LINE</h3><div class="phone"><div class="screen line"><div class="isl"></div><div class="sb" style="background:#fff"><span>9:41</span><span>5G ▮▮▮</span></div><div class="lhead"><div class="av">AP</div><div><b>Rent Care</b><small>● บัญชีทางการ AP</small></div></div><div class="lbody" id="lbody"></div><div class="lqr" id="lqr"></div></div></div></div>
+ <div class="dev win" id="dCoord"><h3>Rent Care · ผู้ประสานงาน</h3><div class="bar"><i></i><i></i><i></i><span>Rent Care Console</span></div><div class="wbody" id="wbody"></div></div>
+ <div class="dev" id="dTenant"><h3>ผู้เช่า · Smart World</h3><div class="phone"><div class="screen app"><div class="isl"></div><div class="sb" style="background:var(--dark);color:#fff"><span>9:41</span><span>5G ▮▮▮</span></div><div id="tbody" style="display:flex;flex-direction:column;flex:1;min-height:0"></div></div></div></div>
+</div>
+<p class="note">Prototype นี้จำลอง loop เต็มของ Rent Care ฟีเจอร์เป็นข้อเสนอ ยังไม่ได้ยืนยันกับทีมพัฒนาและทีมที่เกี่ยวข้อง ชื่อ ตัวเลข และข้อความทั้งหมดเป็นตัวอย่าง · ทีม BC / Vesta / นิติฯ จำลองในกล่อง "ทีมที่เกี่ยวข้อง"</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const NAMES=['คุณสมชาย ก.','คุณนภา ว.'];
+const fresh=()=>({phase:'new',cycle:1,r:null,repairs:0,reports:0,after:'contract',log:[],chat:[]});
+let st=fresh(),autoT=null,seen=0,rot=0,prevIdx=0;
+const tn=()=>NAMES[(st.cycle-1)%2];
+const crd=(h,rows)=>`<div class="card"><div class="ch">${h}</div><div class="cb">${rows.map(r=>`<div class="r"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div></div>`;
+// A: by=ผู้ลงมือ, when=พร้อมทำเมื่อ, fn=เปลี่ยนสถานะ, lg=บันทึกเคส, c=ข้อความในแชท LINE ของเจ้าของ
+const A={
+ submit:{by:'owner',label:'ขอให้ดูแลห้องเช่า',when:s=>s.phase=='new',fn:s=>{s.phase='review'},lg:['เจ้าของ','ส่งคำขอให้ดูแลห้อง A-1203'],c:()=>[['out','ขอให้ดูแลห้อง A-1203 ค่าเช่า ฿18,000 ว่างให้เข้าอยู่ 1 ม.ค.'],['in','รับเรื่องแล้วครับ <b>เปิดเคส #RC-0412</b> กำลังตรวจข้อมูลห้อง']]},
+ sendBC:{by:'coord',label:'ตรวจแล้ว ส่งต่อให้ BC',when:s=>s.phase=='review',fn:s=>{s.phase='listing'},lg:['Rent Care','ส่งต่อ BC พร้อมข้อมูลห้องและราคา'],c:()=>[['in','ส่งต่อให้ <b>BC</b> ลงประกาศและพาชมห้องแล้วครับ จะแจ้งทันทีเมื่อมีผู้สนใจ']]},
+ bcFound:{by:'BC',label:'ส่งผู้เช่าที่คัดแล้ว',when:s=>s.phase=='listing',fn:s=>{s.phase='proposed'},lg:['BC','พาชมและคัดผู้เช่า ส่งให้เจ้าของอนุมัติ'],c:()=>[['in',crd('พบผู้เช่าที่เหมาะสม',[['ผู้เช่า',tn()],['สัญญา','12 เดือน'],['ค่าเช่า','฿18,000'],['มัดจำ','2 เดือน']])],['in','ต้องการ<b>ปรับห้องก่อนเข้าอยู่</b>ไหมครับ? (ไม่บังคับ)']]},
+ approveSkip:{by:'owner',label:'อนุมัติ · ใช้สภาพห้องเดิม',when:s=>s.phase=='proposed',fn:s=>{s.phase='contract';s.after='contract'},lg:['เจ้าของ','อนุมัติผู้เช่า ไม่ปรับห้อง'],c:()=>[['out','อนุมัติผู้เช่า ใช้สภาพห้องเดิม'],['in','รับทราบครับ กำลังเตรียมสัญญา']]},
+ approveReno:{by:'owner',label:'อนุมัติ + ขอปรับห้อง',alt:1,when:s=>s.phase=='proposed',fn:s=>{s.phase='reno_quote';s.after='contract'},lg:['เจ้าของ','อนุมัติผู้เช่า และขอปรับห้อง'],c:()=>[['out','อนุมัติผู้เช่า และขอปรับห้องก่อนเข้าอยู่'],['in','ส่งให้ <b>Vesta</b> ประเมินห้องแล้วครับ']]},
+ vQuote:{by:'Vesta',label:'ส่งใบเสนอราคาปรับห้อง',when:s=>s.phase=='reno_quote',fn:s=>{s.phase='reno_approve'},lg:['Vesta','เสนอราคาทาสี + ล้างแอร์ ฿12,500'],c:()=>[['in',crd('ใบเสนอราคาปรับห้อง',[['ทาสีทั้งห้อง','฿9,500'],['ล้างแอร์ 2 เครื่อง','฿3,000'],['รวม','฿12,500']])]]},
+ approveQuote:{by:'owner',label:'อนุมัติ ฿12,500',when:s=>s.phase=='reno_approve',fn:s=>{s.phase='reno_work'},lg:['เจ้าของ','อนุมัติใบเสนอราคา ฿12,500'],c:()=>[['out','อนุมัติ ฿12,500'],['in','Vesta เริ่มงานแล้วครับ']]},
+ vDone:{by:'Vesta',label:'ปรับห้องเสร็จ ส่งรูป',when:s=>s.phase=='reno_work',fn:s=>{s.phase=s.after},lg:['Vesta','ปรับห้องเสร็จ ส่งรูปก่อน-หลัง'],c:()=>[['in','ปรับห้องเสร็จแล้ว ✔ ดูรูปก่อน-หลังได้ในแอปครับ']]},
+ makeContract:{by:'coord',label:'ทำสัญญา + เชิญผู้เช่า',when:s=>s.phase=='contract',fn:s=>{s.phase='invited'},lg:['Rent Care','ทำสัญญา เพิ่มผู้เช่าเป็นสมาชิกในบ้านตามวันสัญญา'],c:()=>[['in','ทำสัญญาเสร็จแล้วครับ ส่งคำเชิญให้ผู้เช่าเข้า <b>Smart World</b> แล้ว']]},
+ register:{by:'tenant',label:'สมัคร + ยอมรับ PDPA',when:s=>s.phase=='invited',fn:s=>{s.phase='checkin'},lg:['ผู้เช่า','สมัคร Smart World ยอมรับ PDPA'],c:()=>[['in','ผู้เช่าสมัครและยอมรับ PDPA แล้ว กำลังตรวจรับห้อง']]},
+ confirmRoom:{by:'tenant',label:'ตรวจรับห้อง + รับกุญแจดิจิทัล',when:s=>s.phase=='checkin',fn:s=>{s.phase='active'},lg:['Smart World','เปิดสิทธิ์ บิล แจ้งซ่อม digital key · นิติฯ ออกคีย์การ์ด'],c:()=>[['in','ผู้เช่าตรวจรับห้องและรับกุญแจดิจิทัลแล้ว ✔ <b>เริ่มสัญญา</b>']]},
+ reportRepair:{by:'tenant',label:'แจ้งซ่อม: แอร์ไม่เย็น',when:s=>s.phase=='active'&&!s.r&&s.repairs==0,fn:s=>{s.r='reported'},lg:['ผู้เช่า','แจ้งซ่อม: แอร์ไม่เย็น พร้อมรูป'],c:()=>[['in','ผู้เช่าแจ้งซ่อม: <b>แอร์ไม่เย็น</b> Rent Care กำลังคัดกรอง']]},
+ triage:{by:'coord',label:'คัดกรอง + ขอราคาช่าง',when:s=>s.r=='reported',fn:s=>{s.r='quote'},lg:['Rent Care','คัดกรอง: สึกหรอปกติ ค่าใช้จ่ายเป็นของเจ้าของ'],c:()=>[['in','คัดกรองแล้ว: การสึกหรอปกติ กำลังขอราคาช่างครับ']]},
+ vQuoteRepair:{by:'Vesta',label:'ช่างส่งราคา ฿1,800',when:s=>s.r=='quote',fn:s=>{s.r='approval'},lg:['ช่าง','เสนอ ฿1,800 (เกินวงเงินอัตโนมัติ ฿1,000)'],c:()=>[['in',crd('ขออนุมัติค่าซ่อม',[['งาน','ล้างแอร์ + เติมน้ำยา'],['ราคา','฿1,800'],['วงเงินอัตโนมัติ','฿1,000']])]]},
+ approveRepair:{by:'owner',label:'อนุมัติซ่อม ฿1,800',when:s=>s.r=='approval',fn:s=>{s.r='working'},lg:['เจ้าของ','อนุมัติค่าซ่อม ฿1,800'],c:()=>[['out','อนุมัติ ฿1,800'],['in','ส่งช่างเข้าซ่อมแล้วครับ']]},
+ vFix:{by:'Vesta',label:'ช่างซ่อมเสร็จ ส่งรูป',when:s=>s.r=='working',fn:s=>{s.r=null;s.repairs++},lg:['ช่าง','ซ่อมเสร็จ ส่งรูปหลังซ่อม ปิดงาน'],c:()=>[['in','ซ่อมเสร็จแล้ว ✔ ดูรูปหลังซ่อมได้ในแอปครับ']]},
+ sendReport:{by:'coord',label:'ส่งรายงานรายเดือน',when:s=>s.phase=='active'&&!s.r&&s.reports==0&&s.repairs>0,fn:s=>{s.reports++},lg:['Rent Care','ส่งรายงานเดือนให้เจ้าของ'],c:()=>[['in',crd('รายงานประจำเดือน',[['ค่าเช่า','฿18,000 ชำระแล้ว'],['งานซ่อม','1 งาน · ฿1,800'],['สัญญาหมด','31 ธ.ค.']])]]},
+ moveOut:{by:'tenant',label:'แจ้งย้ายออก',when:s=>s.phase=='active'&&!s.r&&s.reports>0,fn:s=>{s.phase='moveout'},lg:['ผู้เช่า','แจ้งย้ายออก 31 ธ.ค.'],c:()=>[['in','ผู้เช่าแจ้งย้ายออก 31 ธ.ค. เราจะตรวจห้องให้ครับ']]},
+ inspect:{by:'coord',label:'ตรวจเทียบรูปวันเข้า-ออก',when:s=>s.phase=='moveout',fn:s=>{s.phase='settle'},lg:['Rent Care','เทียบรูปเข้า-ออก ไม่พบความเสียหาย'],c:()=>[['in','ตรวจเทียบรูปวันเข้า-ออกแล้ว <b>ไม่พบความเสียหาย</b> ✔']]},
+ settle:{by:'coord',label:'สรุปมัดจำ + ปิดสิทธิ์ผู้เช่า',when:s=>s.phase=='settle',fn:s=>{s.phase='closed'},lg:['Smart World','ปิดสิทธิ์ผู้เช่า คืนมัดจำ ฿36,000 · นิติฯ รับคืนคีย์การ์ด'],c:()=>[['in','คืนมัดจำ ฿36,000 และปิดสิทธิ์ผู้เช่าแล้ว ห้องว่าง <b>ปล่อยเช่าต่อ</b>ไหมครับ?']]},
+ relist:{by:'owner',label:'ปล่อยเช่าต่อทันที',when:s=>s.phase=='closed',fn:s=>{s.cycle++;s.phase='listing';s.r=null;s.repairs=0;s.reports=0},lg:['เจ้าของ','ปล่อยเช่าต่อ ส่ง BC หาผู้เช่ารายใหม่'],c:s=>[['out','ปล่อยเช่าต่อทันที'],['sys','รอบที่ '+s.cycle],['in','ส่งให้ <b>BC</b> หาผู้เช่ารายใหม่แล้วครับ']]},
+ relistReno:{by:'owner',label:'ปรับห้องก่อนปล่อยต่อ',alt:1,when:s=>s.phase=='closed',fn:s=>{s.cycle++;s.phase='reno_quote';s.after='listing';s.r=null;s.repairs=0;s.reports=0},lg:['เจ้าของ','ปรับห้องก่อนปล่อยเช่าต่อ'],c:s=>[['out','ปรับห้องก่อนปล่อยต่อ'],['sys','รอบที่ '+s.cycle],['in','ส่งให้ <b>Vesta</b> ประเมินก่อนปล่อยเช่าครับ']]}
+};
+const avail=by=>Object.keys(A).filter(k=>A[k].when(st)&&(Array.isArray(by)?by.includes(A[k].by):A[k].by==by));
+const rec=()=>Object.keys(A).find(k=>A[k].when(st)&&!A[k].alt);
+const pick=()=>{const rn=$('reno').checked;
+ if(rn&&st.cycle==1&&st.phase=='proposed')return 'approveReno';
+ if(rn&&st.phase=='closed'&&st.cycle==1)return 'relistReno';
+ return rec()};
+function act(k,silent){const a=A[k];if(!a||!a.when(st))return;a.fn(st);st.log.push(a.lg.concat(st.cycle));a.c(st).forEach(m=>st.chat.push({r:m[0],t:m[1]}));if(!silent)render()}
+const btns=by=>avail(by).map(k=>`<button class="btn${k==rec()?' go':''}" onclick="act('${k}')">${A[k].label}</button>`).join('');
+const pill=(t,k)=>`<span class="pill ${k}">${t}</span>`;
+// ---- stages
+const ST=[['🔎','หาผู้เช่า','BC'],['🛠️','ปรับห้อง*','Vesta (ถ้าต้องการ)'],['🔑','ส่งมอบ','Rent Care + นิติฯ'],['🏠','ระหว่างเช่า','ผู้เช่า + ช่าง'],['📊','รายงาน','Rent Care'],['📦','ย้ายออก','ตรวจห้อง → วนกลับ']];
+const PO=['new','review','listing','proposed','reno_quote','reno_approve','reno_work','contract','invited','checkin','active','moveout','settle','closed'];
+const po=()=>PO.indexOf(st.phase);
+function sIdx(){const p=st.phase;if(po()<=3)return 0;if(p.startsWith('reno'))return 1;if(['contract','invited','checkin'].includes(p))return 2;if(p=='active')return st.reports?4:3;return 5}
+const CX=240,CY=215,R=140;
+const pt=(i,r=R)=>{const a=(-90+60*i)*Math.PI/180;return[CX+r*Math.cos(a),CY+r*Math.sin(a)]};
+function drawRing(){
+ let s=`<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#C9202C"/></marker><marker id="ag" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ring)"/></marker><radialGradient id="hub" cx="50%" cy="40%"><stop offset="0" stop-color="#e2495a"/><stop offset="1" stop-color="#921C1E"/></radialGradient></defs>`;
+ const idx=sIdx();
+ for(let i=0;i<6;i++){const a0=(-90+60*i+17)*Math.PI/180,a1=(-90+60*(i+1)-17)*Math.PI/180;
+  const x0=CX+R*Math.cos(a0),y0=CY+R*Math.sin(a0),x1=CX+R*Math.cos(a1),y1=CY+R*Math.sin(a1);
+  const on=i<idx;s+=`<path d="M${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1}" fill="none" stroke="${on?'#C9202C':'var(--ring)'}" stroke-width="${on?4:3}" ${on?'':'stroke-dasharray="2 7" stroke-linecap="round"'} marker-end="url(#${on?'ah':'ag'})"/>`}
+ // hub
+ s+=`<circle cx="${CX}" cy="${CY}" r="68" fill="url(#hub)"/><text x="${CX}" y="${CY-24}" text-anchor="middle" fill="#fff" font-size="12" opacity=".85">เคส #RC-0412</text><text x="${CX}" y="${CY+4}" text-anchor="middle" fill="#fff" font-size="19" font-weight="800">Smart World</text><text x="${CX}" y="${CY+24}" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">รอบที่ ${st.cycle}</text><text x="${CX}" y="${CY+42}" text-anchor="middle" fill="#fff" font-size="10.5" opacity=".85">ศูนย์กลางสถานะ</text>`;
+ ST.forEach((n,i)=>{const[x,y]=pt(i),done=i<idx,act=i==idx;
+  s+=`<g>${act?`<circle class="pulse" cx="${x}" cy="${y}" r="30" fill="#C9202C"/>`:''}<circle cx="${x}" cy="${y}" r="30" fill="${done||act?'#C9202C':'var(--card)'}" stroke="${done||act?'#921C1E':'var(--ring)'}" stroke-width="3"/><text x="${x}" y="${y+9}" text-anchor="middle" font-size="25">${done?'✅':n[0]}</text></g>`;
+  const [lx,ly]=pt(i,R+52);const an=Math.abs(lx-CX)<10?'middle':lx>CX?'start':'end';const lxx=an=='middle'?lx:lx+(lx>CX?-14:14);
+  s+=`<text class="nodeLabel" x="${lxx}" y="${ly-2}" text-anchor="${an}">${i+1} ${n[1]}</text><text class="nodeSub" x="${lxx}" y="${ly+12}" text-anchor="${an}">${n[2]}</text>`});
+ // token
+ const [tx,ty]=pt(0);
+ s+=`<g id="tok" style="transform-origin:${CX}px ${CY}px;transform:rotate(${rot}deg)"><circle cx="${tx}" cy="${ty+44}" r="9" fill="#fff" stroke="#C9202C" stroke-width="3"/><circle cx="${tx}" cy="${ty+44}" r="3.5" fill="#C9202C"/></g>`;
+ $('ring').innerHTML=s;
+}
+// ---- devices
+function lineChat(){
+ const prev=seen;
+ $('lbody').innerHTML=(st.chat.length?'':`<div class="sysmsg">เริ่มการสนทนากับ Rent Care</div>`)+st.chat.map((m,i)=>{const c=i>=prev?' pop':'';
+  if(m.r=='sys')return `<div class="sysmsg${c}">— ${m.t} —</div>`;
+  const body=m.t.startsWith('<div class="card"')?m.t:`<div class="bub">${m.t}</div>`;
+  return m.r=='in'?`<div class="m in${c}"><div class="av">AP</div>${body}</div>`:`<div class="m out${c}">${body}</div>`}).join('');
+ seen=st.chat.length;$('lbody').scrollTop=$('lbody').scrollHeight;
+ $('lqr').innerHTML=btns('owner')||`<div class="idle">รอทีมดำเนินการ…</div>`;
+}
+function tenantApp(){const s=st,p=s.phase,head=(a,b)=>`<div class="ahead"><small>${a}</small><b>${b}</b></div>`;
+ let h='',body='';
+ if(po()<=7){h=head('Smart World','ยังไม่ได้เชื่อมกับห้อง');body=`<div class="empty"><span class="big">${s.cycle>1&&po()<=6?'🔒':'🕘'}</span>${s.cycle>1&&po()<=6?'สิทธิ์ผู้เช่าเดิมถูกปิดแล้ว<br>รอผู้เช่ารายใหม่':'ผู้เช่ายังอยู่กับ BC<br>จะเข้า Smart World ตอนส่งมอบ'}</div>`}
+ else if(p=='invited'){h=head('คำเชิญ','ห้อง A-1203');body=`<div class="ac"><b>${tn()}</b> ถูกเชิญเข้าห้อง<br>ตามสัญญาเช่าที่ลงนาม</div><div class="ac"><b>นโยบายข้อมูลส่วนบุคคล (PDPA)</b><br>ใช้ข้อมูลเพื่อ: สัญญา บิล แจ้งซ่อม กุญแจดิจิทัล ข้อมูลถูกปิดสิทธิ์เมื่อสิ้นสุดสัญญา</div>${btns('tenant')}`}
+ else if(p=='checkin'){h=head('ตรวจรับห้อง','ห้อง A-1203');body=`<div class="ac"><b>บันทึกสภาพห้อง</b><div class="photos"><i>🛋️</i><i>🚿</i><i>❄️</i></div><div class="r" style="margin-top:6px"><span>เครื่องใช้ไฟฟ้า</span>${pill('บันทึกแล้ว','ok')}</div><div class="r"><span>กุญแจดิจิทัล</span>${pill('พร้อมเปิด','wait')}</div></div>${btns('tenant')}`}
+ else if(p=='active'){h=head('สวัสดี '+tn(),'ห้อง A-1203');
+  const tiles=`<div class="tiles"><div class="tile"><i>🔑</i>กุญแจ</div><div class="tile"><i>🧾</i>บิล</div><div class="tile"><i>📦</i>พัสดุ 1</div><div class="tile"><i>🛠️</i>แจ้งซ่อม</div></div>`;
+  let r='';if(s.r){const lv={reported:1,quote:2,approval:3,working:4}[s.r];r=`<div class="ac"><b>แจ้งซ่อม: แอร์ไม่เย็น</b><br>${({reported:'รอ Rent Care คัดกรอง',quote:'รอราคาช่าง',approval:'รอเจ้าของอนุมัติ',working:'ช่างกำลังซ่อม'})[s.r]}<div class="steps">${[1,2,3,4].map(i=>`<i class="${i<=lv?'on':''}"></i>`).join('')}</div></div>`}
+  else if(s.repairs)r=`<div class="ac"><b>ปิดงานซ่อมแล้ว ✔</b><br>แอร์ใช้งานได้ปกติ</div>`;
+  body=tiles+`<div class="ac"><div class="r"><span>ค่าส่วนกลาง</span>${pill('ชำระแล้ว','ok')}</div><div class="r"><span>สัญญาสิ้นสุด</span><b>31 ธ.ค.</b></div></div>`+r+btns('tenant')}
+ else if(p=='moveout'||p=='settle'){h=head('แจ้งย้ายออก','31 ธ.ค.');body=`<div class="ac"><div class="r"><span>ตรวจสภาพห้อง</span>${p=='moveout'?pill('รอตรวจ','wait'):pill('เสร็จ','ok')}</div><div class="r"><span>คืนมัดจำ</span>${pill(p=='moveout'?'รอ':'กำลังสรุป','wait')}</div></div><div class="ac">Rent Care จะเทียบรูปวันเข้า-ออก และสรุปมัดจำให้</div>`}
+ else{h=head('สัญญาสิ้นสุด','ขอบคุณที่ใช้บริการ');body=`<div class="empty"><span class="big">👋</span>ปิดสิทธิ์ห้อง A-1203 แล้ว<br>คืนมัดจำ ฿36,000 เรียบร้อย</div>`}
+ $('tbody').innerHTML=h+`<div class="abody">${body}</div>`;
+}
+function console_(){const s=st,p=s.phase,n=po();
+ const items=[['รับเรื่องจากเจ้าของ',n>=1],['ส่งต่อ BC หาผู้เช่า',n>=2],['เจ้าของอนุมัติผู้เช่า',n>=4],['ทำสัญญา + เชิญผู้เช่าเข้า Smart World',n>=8],['ผู้เช่ายืนยัน PDPA + ตรวจรับห้อง',n>=10],['ติดตามงานซ่อม (ถ้ามี)',s.repairs>0],['ส่งรายงานรายเดือนให้เจ้าของ',s.reports>0],['ตรวจเทียบรูป + สรุปมัดจำ + ปิดสิทธิ์',n>=13]];
+ const nx=items.findIndex(x=>!x[1]);
+ const waitMsg={listing:'รอ BC หาผู้เช่า',proposed:'รอเจ้าของอนุมัติผู้เช่า',reno_quote:'รอ Vesta เสนอราคา',reno_approve:'รอเจ้าของอนุมัติราคา',reno_work:'รอ Vesta ทำงาน',invited:'รอผู้เช่าสมัคร + PDPA',checkin:'รอผู้เช่าตรวจรับห้อง',closed:'รอเจ้าของตัดสินใจปล่อยต่อ',new:'ยังไม่มีเคสใหม่'};
+ const mine=btns('coord');
+ const alert=s.r=='reported'?`<div class="card" style="margin:10px 0"><div class="ch">แจ้งซ่อมใหม่ · แอร์ไม่เย็น</div><div class="cb">ผู้เช่าแนบรูป ต้องคัดกรองและขอราคาช่าง</div></div>`:'';
+ $('wbody').innerHTML=p=='new'?`<div style="text-align:center;padding:120px 0;color:var(--mut)"><div style="font-size:46px">📥</div>ยังไม่มีเคสใหม่ในคิว</div>`:
+ `<div class="wh"><div><h4>เคส #RC-0412 · ห้อง A-1203</h4><small>เจ้าของ: ตัวอย่าง · รอบที่ ${s.cycle}</small></div>${pill(waitMsg[p]||(s.r?'มีงานซ่อมกำลังดำเนินการ':'ดำเนินการ'),'wait')}</div>
+ <div class="kv"><div><small>ค่าเช่า</small><b>฿18,000</b></div><div><small>ผู้เช่า</small><b>${n>=4&&n<13?tn():'—'}</b></div><div><small>งานซ่อม</small><b>${s.repairs}</b></div></div>${alert}
+ <div class="chk">${items.map((x,i)=>`<div class="${x[1]?'d':i==nx?'n':''}"><i>${x[1]?'✓':''}</i>${x[0]}</div>`).join('')}</div>${mine||`<div class="idle">${waitMsg[p]||'รอทีมอื่นดำเนินการ'}</div>`}`;
+}
+function team(){const p=st.phase,r=st.r,k=pick();
+ const BC=p=='listing'?['กำลังหาผู้เช่า','wait']:p=='proposed'?['ส่งผู้เช่าแล้ว','ok']:['ไม่มีงาน','gray'];
+ const V=p=='reno_quote'?['ประเมินห้อง','wait']:p=='reno_approve'?['รออนุมัติ','wait']:p=='reno_work'?['กำลังทำงาน','wait']:r=='quote'?['ประเมินงานซ่อม','wait']:r=='working'?['กำลังซ่อม','wait']:['ไม่มีงาน','gray'];
+ const N=['checkin','active'].includes(p)?['คีย์การ์ดใช้งาน','ok']:p=='invited'?['เตรียมคีย์การ์ด','wait']:p=='closed'?['รับคืนคีย์การ์ด','ok']:['ไม่มีงาน','gray'];
+ const row=(n,d,c,v,by,col)=>{const ab=avail(by);return `<div class="mem${ab.includes(k)?' act':''}"><div class="h"><div class="a" style="background:${col}">${n[0]}</div><div><div class="n">${n}</div><div class="d">${d}</div></div><div class="st">${pill(v[0],v[1])}</div></div>${ab.map(x=>`<button class="btn${x==k?' go':''}" onclick="act('${x}')" style="margin-top:8px">${A[x].label}</button>`).join('')}</div>`};
+ $('team').innerHTML=row('BC','หาผู้เช่า / ผู้ซื้อ','',BC,['BC'],'#C9202C')+row('Vesta','ปรับห้อง ซ่อม ตกแต่ง','',V,['Vesta'],'#792826')+row('นิติบุคคล','คีย์การ์ด กฎอาคาร','',N,['__none'],'#8a6d3b');
+}
+const NOW={new:['📲','เจ้าของเริ่มต้น','กดขอให้ดูแลห้องเช่าใน LINE'],review:['🗂️','Rent Care รับเคส','ตรวจข้อมูลห้อง แล้วส่งต่อให้ BC'],listing:['🔎','BC หาผู้เช่า','ลงประกาศ พาชม คัดผู้เช่า'],proposed:['🤝','เจ้าของอนุมัติผู้เช่า','และเลือกว่าจะปรับห้องหรือไม่ (ไม่บังคับ)'],reno_quote:['🛠️','Vesta ประเมินห้อง','ส่งใบเสนอราคาให้เจ้าของ'],reno_approve:['💬','เจ้าของอนุมัติราคา','ผ่าน LINE ครั้งเดียว'],reno_work:['🎨','Vesta ลงมือทำ','ส่งรูปก่อน-หลังเมื่อเสร็จ'],contract:['📝','ทำสัญญา','เพิ่มผู้เช่าเป็นสมาชิกในบ้านตามสัญญา'],invited:['📩','เชิญผู้เช่าเข้า Smart World','สมัครและยอมรับ PDPA'],checkin:['📸','ตรวจรับห้อง','บันทึกรูป รับกุญแจดิจิทัล'],active:['🏠','ระหว่างเช่า','แจ้งซ่อม อนุมัติ และรายงานรายเดือน'],moveout:['📦','ย้ายออก','เทียบรูปวันเข้า-ออก'],settle:['💰','สรุปมัดจำ','ปิดสิทธิ์ผู้เช่าใน Smart World'],closed:['🔁','ปล่อยเช่าต่อ','วนกลับไปให้ BC หาผู้เช่ารายใหม่']};
+function render(){
+ const k=pick(),a=k?A[k].by:null,n=NOW[st.phase];
+ $('nowEm').textContent=n[0];$('nowT').textContent=n[1];$('nowS').textContent=n[2]+(k?' · ขั้นถัดไป: '+({owner:'เจ้าของ',coord:'Rent Care',tenant:'ผู้เช่า',BC:'BC',Vesta:'Vesta/ช่าง'}[a])+' — '+A[k].label:'');
+ const idx=sIdx();rot+=((idx-prevIdx+6)%6)*60;prevIdx=idx;
+ drawRing();lineChat();tenantApp();console_();team();
+ $('log').innerHTML=st.log.slice().reverse().map(l=>`<div><span class="who">${l[0]}</span> ${l[1]}${l[2]>1?` <small>(รอบ ${l[2]})</small>`:''}</div>`).join('')||`<div><small>ยังไม่มีเหตุการณ์ กด “ทำขั้นที่แนะนำ”</small></div>`;
+ ['Owner','Coord','Tenant'].forEach(x=>$('d'+x).classList.toggle('act',a==x.toLowerCase()));
+ $('next').disabled=!k;
+}
+$('next').onclick=()=>{const k=pick();if(k)act(k)};
+$('reset').onclick=()=>{clearInterval(autoT);autoT=null;st=fresh();seen=0;rot=0;prevIdx=0;render()};
+$('auto').onclick=()=>{clearInterval(autoT);st=fresh();seen=0;rot=0;prevIdx=0;render();autoT=setInterval(()=>{if(st.cycle==2&&st.phase=='listing'){clearInterval(autoT);return}const k=pick();if(k)act(k);else clearInterval(autoT)},1500)};
+addEventListener('keydown',e=>{if(e.key=='ArrowRight'){const k=pick();if(k)act(k)}});
+const m=location.hash.match(/s=(\d+)/);if(location.hash.includes('reno'))$('reno').checked=true;
+if(m){for(let i=0;i<+m[1];i++){const k=pick();if(k)act(k,true)}seen=st.chat.length;}
+render();
+</script>
+</body>
+</html>
